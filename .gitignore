@@ -54,5 +54,6 @@ dkms.conf
 # Text editor
 .vscode/
 
-# Build
+# Build and deploy
 build/
+deploy/
