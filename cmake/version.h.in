@@ -1,38 +1,23 @@
 #ifndef PONG_VERSION_H
 #define PONG_VERSION_H
 
+// Project name
 #define PROJECT_NAME "@PROJECT_NAME@"
 
+// Project version notation
 #define PROJECT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 #define PROJECT_VERSION_MINOR @PROJECT_VERSION_MINOR@
 #define PROJECT_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
-// Git information.
+// Git information
 #define GIT_COMMIT_HASH "@GIT_COMMIT_HASH@"
 #define GIT_LAST_TAG "@GIT_LAST_TAG@"
 
-// Build date information.
+// Build date information
 #define BUILD_DATE "@BUILD_DATE@"
 #define BUILD_DATE_SHORT "@BUILD_DATE_SHORT@"
 
-// Project version information.
-#define PROJECT_VERSION "@PROJECT_VERSION@"
-#define PROJECT_VERSION_HASH \
-    "@PROJECT_VERSION@-@GIT_COMMIT_HASH@"
-#define PROJECT_VERSION_HASH_DATE \
-    "@PROJECT_VERSION@-@GIT_COMMIT_HASH@ (@BUILD_DATE_SHORT@)"
-#define PROJECT_VERSION_HASH_STATUS \
-    "@PROJECT_VERSION@-@GIT_COMMIT_HASH@-@BUILD_STATUS@"
-#define PROJECT_VERSION_HASH_STATUS_DATE \
-    "@PROJECT_VERSION@-@GIT_COMMIT_HASH@-@BUILD_STATUS@ (@BUILD_DATE_SHORT@)"
+// Version string
+#define VERSION_STRING "@VERSION_STRING@"
 
-#define PRINT_VERSION() \
-    printf("%s version: %d.%d.%d (%s)\nCommit: %s\n", \
-           PROJECT_NAME, \
-           PROJECT_VERSION_MAJOR, \
-           PROJECT_VERSION_MINOR, \
-           PROJECT_VERSION_PATCH, \
-           PROJECT_VERSION, \
-           GIT_COMMIT_HASH)
-
-#endif
+#endif // PONG_VERSION_H

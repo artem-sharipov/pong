@@ -9,28 +9,39 @@ project(
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# ---- Platform detection. ----
-if(WIN32)
-    message(STATUS "Building for Windows")
-    set(PLATFORM_WINDOWS TRUE)
-elseif(APPLE)
-    message(STATUS "Building for macOS")
-    set(PLATFORM_MACOS TRUE)
-elseif(UNIX AND NOT APPLE)
-    message(STATUS "Building for Linux")
-    set(PLATFORM_LINUX TRUE)
+# Raylib Dependencies
+set(RAYLIB_VERSION 5.5)
+# QUIET or REQUIRED
+find_package(raylib ${RAYLIB_VERSION} QUIET)
+# If there's none, fetch and build raylib
+if (NOT raylib_FOUND) 
+  include(FetchContent)
+  FetchContent_Declare(
+    raylib
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
+    URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
+  )
+  FetchContent_GetProperties(raylib)
+  # Have we downloaded raylib yet?
+  if (NOT raylib_POPULATED) 
+    set(FETCHCONTENT_QUIET NO)
+    FetchContent_MakeAvailable(raylib)
+    # don't build the supplied examples
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+  endif()
 endif()
 
+
 # ---- Git Versioning. ----
+set(GIT_LAST_TAG "v${PROJECT_VERSION}")
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
 
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0
+        COMMAND ${GIT_EXECUTABLE} tag v${PROJECT_VERSION}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE GIT_LAST_TAG
-        OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
 
@@ -42,31 +53,17 @@ if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         ERROR_QUIET
     )
 
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} diff --quiet --exit-code
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE GIT_HAS_CHANGES
-    )
 else()
-    set(GIT_LAST_TAG "v${PROJECT_VERSION}")
     set(GIT_COMMIT_HASH "unknown")
-    set(GIT_HAS_CHANGES 0)
 endif()
 
 # ---- Build Information. ----
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M:%S" UTC)
 string(TIMESTAMP BUILD_DATE_SHORT "%Y-%m-%d" UTC)
 
-# ---- Form Full Version. ----
-if(GIT_HAS_CHANGES EQUAL 0)
-    set(BUILD_STATUS "clean")
-else()
-    set(BUILD_STATUS "dirty")
-endif()
-
 set(
     VERSION_STRING
-    "${GIT_LAST_TAG}-${GIT_COMMIT_HASH}-${BUILD_STATUS}"
+    "${GIT_LAST_TAG}-${GIT_COMMIT_HASH} (${BUILD_DATE})"
 )
 
 #---- Version Configuration. ----
@@ -77,13 +74,11 @@ configure_file(
 
 #---- Source Files. ----
 file(GLOB SOURCES "source/*.c")
-file(GLOB HEADERS "include/*.h")
 
 #---- Target Executable Files. ----
 add_executable(
     ${PROJECT_NAME}
     ${SOURCES}
-    ${HEADERS}
 )
 
 #---- Include Directories. ----
@@ -102,8 +97,7 @@ target_link_libraries(
 )
 
 #---- Platform-Specific Dependencies. ----
-if(PLATFORM_WINDOWS)
-    # Windows dependencies.
+if(WIN32)
     target_link_libraries(
         ${PROJECT_NAME}
         PRIVATE
@@ -112,8 +106,7 @@ if(PLATFORM_WINDOWS)
         user32
         gdi32
     )
-elseif(PLATFORM_LINUX)
-    # Linux dependencies.
+elseif(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     find_package(Threads REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -127,19 +120,6 @@ elseif(PLATFORM_LINUX)
         dl
         ${CMAKE_THREAD_LIBS_INIT}
         ${OPENGL_LIBRARIES}
-    )
-elseif(PLATFORM_MACOS)
-    # macOS dependencies.
-    find_library(COCOA_LIB Cocoa)
-    find_library(IOKIT_LIB IOKit)
-    find_library(OPENGL_LIB OpenGL)
-    
-    target_link_libraries(
-        ${PROJECT_NAME}
-        PRIVATE
-        ${COCOA_LIB}
-        ${IOKIT_LIB}
-        ${OPENGL_LIB}
     )
 endif()
 
