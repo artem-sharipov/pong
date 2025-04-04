@@ -30,7 +30,7 @@ Specific information about the Pong game itself can be found [here](https://en.w
 
 - No game engine - just a single [raylib](https://www.raylib.com/index.html) library
 
-- The [raylib](https://www.raylib.com/index.html) library  library is pulled at build time from its [official repository on Github](https://github.com/raysan5/raylib).
+- The [raylib](https://www.raylib.com/index.html) library is pulled at build time from its [official repository on Github](https://github.com/raysan5/raylib).
 
 - Supported building of the game for Windows and GNU/Linux
 
@@ -60,7 +60,7 @@ To build, clone the repository (or its fork) to yourself locally. Since cmake is
     ```
     Build tools are platform specific. If these tools are missing, the build will fail. In case of a build fail, you have to read the error messages.
 
-After a successful build, the game needs to be deployed. - go to the next section.
+After a successful build, the game needs to be deployed - go to the next section.
 
 ## Deploy
 
