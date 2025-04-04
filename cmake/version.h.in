@@ -1,0 +1,23 @@
+#ifndef PONG_VERSION_H
+#define PONG_VERSION_H
+
+// Project name
+#define PROJECT_NAME "@PROJECT_NAME@"
+
+// Project version notation
+#define PROJECT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define PROJECT_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define PROJECT_VERSION_PATCH @PROJECT_VERSION_PATCH@
+
+// Git information
+#define GIT_COMMIT_HASH "@GIT_COMMIT_HASH@"
+#define GIT_LAST_TAG "@GIT_LAST_TAG@"
+
+// Build date information
+#define BUILD_DATE "@BUILD_DATE@"
+#define BUILD_DATE_SHORT "@BUILD_DATE_SHORT@"
+
+// Version string
+#define VERSION_STRING "@VERSION_STRING@"
+
+#endif // PONG_VERSION_H
