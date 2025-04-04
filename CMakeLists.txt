@@ -98,6 +98,13 @@ target_link_libraries(
 
 #---- Platform-Specific Dependencies. ----
 if(WIN32)
+    if (MSVC)
+        set(CMAKE_EXE_LINKER_FLAGS
+        "${CMAKE_EXE_LINKER_FLAGS} SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+    elseif (MINGW)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+    endif()
+
     target_link_libraries(
         ${PROJECT_NAME}
         PRIVATE
