@@ -41,49 +41,33 @@ For quick playability, go to the [releases](https://github.com/artem-sharipov/po
 
 If you want to build the game yourself - go to the next section.
 
-## Build
+## Build & Deploy
 
-To build, clone the repository (or its fork) to yourself locally. Since cmake is used, the configuration and build steps are identical for Windows and GNU/Linux:
+Building and deploying the game is done by running just one script - `build_and_deploy.py`. This script is fully cross-platform for GNU/Linux and Windows. The script requires `Python 3.8+`.
 
-1. Go to the `pong` repository;
+This script deletes the `build` folder (configuration and build results) and the `deploy` folder (game resources and executable), and then performs the configuration and build using `cmake 3.15+`.
 
-2. Run the command to configure the build:
+After building, deployment is performed - a `deploy` folder is created, in which the game `resources` folder and the executable folder are placed (in the current implementation, this folder structure must be followed in order for the resources to be processed correctly by the game). At the end of deployment, a platform-dependent archive with the game and its resources is created. The archives in the [releases](https://github.com/artem-sharipov/pong/releases) section are obtained in this way.
 
-    ```
-    cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
-    ```
+To run a script in GNU/Linux, you first need to make it executable with the following command:
 
-3. Once the configuration is complete, start the build itself:
+```bash
+chmod +x build_and_deploy.py
+```
 
-    ```
-    cmake --build build
-    ```
-    Build tools are platform specific. If these tools are missing, the build will fail. In case of a build fail, you have to read the error messages.
+And the launch itself is done like this:
 
-After a successful build, the game needs to be deployed - go to the next section.
+```bash
+./build_and_deploy.py
+```
+In Windows, open a terminal (cmd or PowerShell) in the project folder and run:
+```powershell
+python build_and_deploy.py
+```
+Debugging messages about configuration, build, and deployment may appear in the terminal window from the beginning of the script run. If an error occurs, you can see it by the messages in the terminal. The result of the script build will be a platform-specific archive. After successful build, the terminal can be closed, if it has not closed itself.
 
-## Deploy
-
- Simply, you need to put together the assembled game executable and the `resources` folder. This process is platform-specific, and there are two scripts to automate it: `deploy.bat` for Windows and `deploy.sh` for GNU/Linux. The following subsections describe how to run scripts on different systems.
-
- As a result of successful scripting, the `deploy` folder will appear, in which the game executable and `resources` folder are stored. You can move this folder to a convenient location and rename it. You should run the game from this folder.
-
-### Deploy on Windows
-
-Run `deploy.bat` through the GUI (double-click) or terminal.
-
-### Deploy on GNU/Linux
-
-Make `deploy.sh` executable:
+You might wonder why all stages of preparing the game for use from configuration to deployment are performed by one script, and it does it always cleanly, although, for example, some things may not be rebuilt to save time. First, the point is that the creation of the version string (which the game code uses) occurs only at the configuration stage, so configuring the build once and simply rebuilding the project will not update the version string, in particular the build date and repository status, since this information is obtained only at the configuration stage. We can consider the current solution to be a crutch to some extent. Secondly, a complete clean process guarantees that everything will be built completely as it should be. This build and deployment process can be changed in the future.
     
-```bash
-chmod +x deploy.sh
-```
-Run `deploy.sh`:
-
-```bash
-./deploy.sh
-```
 ## Plans
 
 - Refine in-game controls
