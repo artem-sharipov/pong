@@ -57,3 +57,5 @@ dkms.conf
 # Build and deploy
 build/
 deploy/
+*.tar.gz
+*.zip
