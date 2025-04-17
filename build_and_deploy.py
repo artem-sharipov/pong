@@ -42,7 +42,7 @@ def configure_project() -> None:
 def build_project() -> None:
     """Build the project using CMake."""
     print("\nBuilding the project...")
-    build_cmd = ["cmake", "--build", "build"]
+    build_cmd = ["cmake", "--build", "build", "--config", "Release"]
     try:
         subprocess.run(build_cmd, check=True)
         print("Build completed successfully.")
@@ -51,21 +51,42 @@ def build_project() -> None:
         sys.exit(1)
 
 
-def prepare_deployment_files(build_dir: str, deploy_dir: str) -> None:
-    """Prepare deployment files by copying executable and resources."""
-    # Determine executable name based on OS
+def get_executable_path(build_dir: str) -> str:
+    """Determine the correct executable path based on platform and build type"""
     executable_name = "pong.exe" if platform.system() == "Windows" else "pong"
-    executable_path = os.path.join(build_dir, executable_name)
-    resources_src = os.path.join(os.getcwd(), "resources")
     
-    # Create deployment directory structure
+    if platform.system() == "Windows":
+        # Для MSVC сборки ищем в Debug/Release подпапках
+        for build_type in ["Release", "Debug"]:
+            path = os.path.join(build_dir, build_type, executable_name)
+            if os.path.exists(path):
+                return path
+        # Если не нашли в подпапках, пробуем стандартный путь
+        return os.path.join(build_dir, executable_name)
+    else:
+        # Для Linux/MacOS стандартный путь
+        return os.path.join(build_dir, executable_name)
+
+
+
+def prepare_deployment_files(build_dir: str, deploy_dir: str) -> None:
+    """Prepare deployment files by copying executable and resources"""
+    executable_path = get_executable_path(build_dir)
+    
+    if not os.path.exists(executable_path):
+        raise FileNotFoundError(
+            f"Executable not found at {executable_path}. "
+            "Please check build configuration."
+        )
+
+    # Остальной код остается прежним
     deploy_bin = os.path.join(deploy_dir, "bin")
+    os.makedirs(deploy_bin, exist_ok=True)
+    shutil.copy2(executable_path, deploy_bin)
+    
+    resources_src = os.path.join(os.getcwd(), "resources")
     deploy_resources = os.path.join(deploy_dir, "resources")
     
-    os.makedirs(deploy_bin, exist_ok=True)
-    
-    # Copy files
-    shutil.copy2(executable_path, deploy_bin)
     if os.path.exists(resources_src):
         shutil.copytree(resources_src, deploy_resources, dirs_exist_ok=True)
     else:
