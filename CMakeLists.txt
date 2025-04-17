@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 project(
     pong
     VERSION 0.1.0
@@ -33,18 +33,26 @@ if (NOT raylib_FOUND)
   endif()
 endif()
 
-
-# ---- Git Versioning. ----
+# Versioning using Git
 set(GIT_LAST_TAG "v${PROJECT_VERSION}")
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
 
+    # Delete an existing tag that corresponds to the project version
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} tag v${PROJECT_VERSION} --delete
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        ERROR_QUIET
+    )
+
+    # Create a tag that corresponds to the project version
     execute_process(
         COMMAND ${GIT_EXECUTABLE} tag v${PROJECT_VERSION}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         ERROR_QUIET
     )
 
+    # Get a short hash of the HEAD commit
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -53,17 +61,33 @@ if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         ERROR_QUIET
     )
 
+    # Check if the working directory is dirty
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} diff --quiet --exit-code
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE GIT_DIRTY_RESULT
+    )
+    if(GIT_DIRTY_RESULT EQUAL 0)
+        set(GIT_DIRTY_STATUS "clean")
+    else()
+        set(GIT_DIRTY_STATUS "dirty")
+    endif()
+
 else()
+    # Get a short hash of the HEAD commit
     set(GIT_COMMIT_HASH "unknown")
 endif()
 
-# ---- Build Information. ----
-string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M:%S" UTC)
-string(TIMESTAMP BUILD_DATE_SHORT "%Y-%m-%d" UTC)
+string(
+    TIMESTAMP
+    BUILD_DATE
+    "%Y-%m-%d %H:%M:%S"
+    UTC
+)
 
 set(
     VERSION_STRING
-    "${GIT_LAST_TAG}-${GIT_COMMIT_HASH} (${BUILD_DATE})"
+    "${GIT_LAST_TAG}-${GIT_COMMIT_HASH}-${GIT_DIRTY_STATUS} (${BUILD_DATE})"
 )
 
 #---- Version Configuration. ----
@@ -99,6 +123,7 @@ target_link_libraries(
 #---- Platform-Specific Dependencies. ----
 if(WIN32)
     if (MSVC)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set(CMAKE_EXE_LINKER_FLAGS
         "${CMAKE_EXE_LINKER_FLAGS} SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
     elseif (MINGW)
@@ -132,6 +157,6 @@ endif()
 
 #---- Configuration information. ----
 message(STATUS "Configuring ${PROJECT_NAME} ${VERSION_STRING}")
-message(STATUS "Date: ${BUILD_DATE}")
+message(STATUS "Config and build date: ${BUILD_DATE}")
 message(STATUS "Commit hash: ${GIT_COMMIT_HASH}")
 message(STATUS "Platform: ${CMAKE_SYSTEM_NAME}")
