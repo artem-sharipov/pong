@@ -60,11 +60,11 @@ And the launch itself is done like this:
 ```bash
 ./build_and_deploy.py
 ```
-In Windows, all you need to do is run the script by double-clicking on the script file or:
+In Windows, open a terminal (cmd or PowerShell) in the project folder and run:
 ```powershell
 python build_and_deploy.py
 ```
-Debugging messages about configuration, build, and deployment may appear in the terminal window from the beginning of the script run. If an error occurs, you can see it by the messages in the terminal. The result of the script build will be a platform-specific archive.
+Debugging messages about configuration, build, and deployment may appear in the terminal window from the beginning of the script run. If an error occurs, you can see it by the messages in the terminal. The result of the script build will be a platform-specific archive. After successful build, the terminal can be closed, if it has not closed itself.
 
 You might wonder why all stages of preparing the game for use from configuration to deployment are performed by one script, and it does it always cleanly, although, for example, some things may not be rebuilt to save time. First, the point is that the creation of the version string (which the game code uses) occurs only at the configuration stage, so configuring the build once and simply rebuilding the project will not update the version string, in particular the build date and repository status, since this information is obtained only at the configuration stage. We can consider the current solution to be a crutch to some extent. Secondly, a complete clean process guarantees that everything will be built completely as it should be. This build and deployment process can be changed in the future.
     
