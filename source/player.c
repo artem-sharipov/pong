@@ -18,12 +18,12 @@ void UpdatePlayer(Game *game)
 
     if (IsKeyDown(KEY_UP))
     {
-        player->position.y -= player->speed;
+        player->position.y -= player->speed * env->deltaTime;
         if (player->position.y < 0) player->position.y = 0;
     }
     if (IsKeyDown(KEY_DOWN))
     {
-        player->position.y += player->speed;
+        player->position.y += player->speed * env->deltaTime;
         if ((player->position.y + player->size.y) > env->screenHeight)
             player->position.y = env->screenHeight - player->size.y;
     }

@@ -23,13 +23,13 @@ void UpdateBot(Game *game)
     {
         if (!centerFlag && bot->position.y + bot->size.y/2 > ball->position.y)
         {
-            bot->position.y -= bot->speed;
+            bot->position.y -= bot->speed * env->deltaTime;
             if (bot->position.y < 0)
                 bot->position.y = 0;
         }
         if (!centerFlag && bot->position.y + bot->size.y/2 <= ball->position.y)
         {
-            bot->position.y += bot->speed;
+            bot->position.y += bot->speed * env->deltaTime;
             if (bot->position.y + bot->size.y > env->screenHeight)
                 bot->position.y = env->screenHeight - bot->size.y;
         }

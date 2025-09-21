@@ -15,7 +15,7 @@ void UpdateBall(Game *game)
     Ball *ball = game->ball;
     Sounds *sounds = env->sounds;
 
-    ball->position.x += ball->speed.x;
+    ball->position.x += ball->speed.x * env->deltaTime;
     if (ball->position.x + ball->radius >= env->screenWidth)
     {
         ++env->leftSideScore;
@@ -30,7 +30,7 @@ void UpdateBall(Game *game)
         ResetBall(game);
     }
 
-    ball->position.y += ball->speed.y;
+    ball->position.y += ball->speed.y * env->deltaTime;
     if (ball->position.y + ball->radius >= env->screenHeight)
     {
         ball->speed.y *= -1;

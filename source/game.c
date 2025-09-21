@@ -32,6 +32,7 @@ void DeinitGame(Game *game)
 void UpdateGame(Game *game)
 {
     Env *env = game->env;
+    env->deltaTime = GetFrameTime();
     switch (env->currentScreen)
     {
         case LOGO:
@@ -50,12 +51,9 @@ void UpdateGame(Game *game)
 void UpdateLogoScreen(Game *game)
 {
     Env *env = game->env;
-    ++env->framesCounter;
-
-    if (env->framesCounter > 2*TARGET_FPS)
+    if (GetTime() > 2.0)
     {
         env->currentScreen = TITLE;
-        env->framesCounter = 0;
     }
 }
 
@@ -104,6 +102,9 @@ void DrawGame(Game *game)
 {
     Env *env = game->env;
     ClearBackground(BLACK);
+    // DrawFPS(10, 10);
+    // DrawText(TextFormat("DeltaTime: %.4f", GetFrameTime()), 10, 40, 20, GREEN);
+    // DrawText(TextFormat("Ball pos: %.1f, %.1f", game->ball->position.x, game->ball->position.y), 10, 70, 20, GREEN);
     switch (env->currentScreen)
     {
         case LOGO:

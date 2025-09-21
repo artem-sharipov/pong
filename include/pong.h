@@ -6,10 +6,10 @@
 #define TARGET_FPS (60)
 
 // Game object constants
-#define PADDLE_SPEED (8)
+#define PADDLE_SPEED (500.0F)
 #define BALL_RADIUS (6)
-#define BALL_SPEED (8)
-#define COEF (17)
+#define BALL_SPEED (500.0F)
+#define COEF (1000.0F)
 
 // Font sizes.
 #define FONTSIZE_SMALL (20) 
@@ -44,7 +44,7 @@ struct Env {
     unsigned leftSideScore;
     unsigned rightSideScore;
     GameScreen currentScreen;
-    unsigned framesCounter;
+    float deltaTime;
     bool pause;
     Sounds *sounds;
 };
