@@ -19,7 +19,7 @@ void UpdateBot(Game *game)
     Ball *ball = game->ball;
     static bool centerFlag = false;
 
-    if (ball->position.x > env->screenWidth/2)
+    if (ball->position.x > env->screenWidth/2 && ball->speed.x > 0)
     {
         if (!centerFlag && bot->position.y + bot->size.y/2 > ball->position.y)
         {
