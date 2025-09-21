@@ -5,6 +5,18 @@
 
 #define TARGET_FPS (60)
 
+// Game object constants
+#define PADDLE_SPEED (500.0F)
+#define BALL_RADIUS (6)
+#define BALL_SPEED (500.0F)
+#define COEF (1000.0F)
+
+// Font sizes.
+#define FONTSIZE_SMALL (20) 
+#define FONTSIZE_NORMAL (30)
+#define FONTSIZE_BIG (50)
+#define FONTSIZE_LOGO (160)
+
 typedef struct Game Game;
 typedef struct Env Env;
 typedef struct Sounds Sounds;
@@ -32,7 +44,7 @@ struct Env {
     unsigned leftSideScore;
     unsigned rightSideScore;
     GameScreen currentScreen;
-    unsigned framesCounter;
+    float deltaTime;
     bool pause;
     Sounds *sounds;
 };
@@ -66,5 +78,41 @@ struct Ball {
 void InitGame(Game *game);
 void UpdateDrawFrame(Game *game);
 void DeinitGame(Game *game);
+
+// Init and deinit functions
+void InitSounds(Game *game);
+void InitPlayer(Game *game);
+void InitBot(Game *game);
+void InitBall(Game *game);
+void DeinitSounds(Game *game);
+
+// Update functions
+void UpdateGame(Game *game);
+void UpdateLogoScreen(Game *game);
+void UpdateTitleScreen(Game *game);
+void UpdateGameplayScreen(Game *game);
+void UpdatePlayer(Game *game);
+void UpdateBot(Game *game);
+void UpdateBall(Game *game);
+void ResetGame(Game *game);
+void ResetPlayer(Game *game);
+void ResetBot(Game *game);
+void ResetBall(Game *game);
+
+// Check collisions functions
+void CheckCollisions(Game *game);
+void CheckCollisionPlayerBall(Game *game);
+void CheckCollisionBotBall(Game *game);
+
+// Draw functions
+void DrawGame(Game *game);
+void DrawLogoScreen(Game *game);
+void DrawTitleScreen(Game *game);
+void DrawGameplayScreen(Game *game);
+void DrawEnv(Game *game);
+void DrawPlayer(Game *game);
+void DrawBot(Game *game);
+void DrawBall(Game *game);
+void DrawPause(Game *game);
 
 #endif // PONG_H
