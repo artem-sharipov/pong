@@ -28,8 +28,7 @@ int main(int argc, char *argv[])
     };
 
     InitWindow(env.screenWidth, env.screenHeight, env.title);
-    Image icon = LoadImage("../resources/images/ico.png");
-    SetWindowIcon(icon);
+    InitIco();
     InitAudioDevice();
     InitGame(&game);
     SetTargetFPS(TARGET_FPS);
