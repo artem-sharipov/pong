@@ -33,8 +33,7 @@ void CheckCollisionPlayerBall(Game *game)
         (Vector2){
             player->position.x+player->size.x,
             player->position.y+player->size.y
-        }
-    ))
+        }))
     {
         PlaySound(sounds->paddle);
         ball->speed.x *= -1;
@@ -54,8 +53,7 @@ void CheckCollisionBotBall(Game *game)
         ball->position,
         ball->radius,
         (Vector2){bot->position.x, bot->position.y},
-        (Vector2){bot->position.x, bot->position.y+bot->size.y}
-    ))
+        (Vector2){bot->position.x, bot->position.y+bot->size.y}))
     {
         PlaySound(sounds->paddle);
         ball->speed.x *= -1;
