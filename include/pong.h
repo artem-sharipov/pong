@@ -80,6 +80,7 @@ void UpdateDrawFrame(Game *game);
 void DeinitGame(Game *game);
 
 // Init and deinit functions
+void InitIco(void);
 void InitSounds(Game *game);
 void InitPlayer(Game *game);
 void InitBot(Game *game);

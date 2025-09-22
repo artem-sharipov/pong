@@ -51,6 +51,7 @@ void ResetBall(Game *game)
 
     ball->position.x = env->screenWidth/2;
     ball->position.y = env->screenHeight/2;
+    
     const int ballDirections[2] = {-1, 1};
     ball->speed.x = BALL_SPEED*ballDirections[GetRandomValue(0, 1)];
     ball->speed.y = 0;
